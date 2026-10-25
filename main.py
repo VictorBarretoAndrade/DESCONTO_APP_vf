@@ -1,23 +1,32 @@
 from src.models.desconto import DescontoNormal, DescontoPremium, DescontoVIP
 from src.models.pedido import Pedido
-from src.services.pedido_service import PedidoService
+from src.repositories.pedido_repository import PedidoRepository
 
 if __name__ == "__main__":
-    service = PedidoService()
+    # Configuração do repositório e serviço
+    repo = PedidoRepository()
 
-    # Criando pedidos e aplicando descontos
-    pedido1 = Pedido("Cliente A", DescontoNormal())
-    pedido1.valor_original = 100.0  # Definindo o valor original do pedido
+    # Criando um pedido com desconto
+    pedido1 = Pedido(cliente="Leonardo", desconto=DescontoNormal())
+    pedido1.valor_original = 100.0
 
-    pedido2 = Pedido("Cliente B", DescontoVIP())
-    pedido2.valor_original = 200.0  # Definindo o valor original do pedido
+    # Criando um pedido com desconto
+    pedido2 = Pedido(cliente="Cardia", desconto=DescontoVIP())
+    pedido2.valor_original = 100.0
 
-    pedido3 = Pedido("Cliente C", DescontoPremium())
-    pedido3.valor_original = 300.0  # Definindo o valor original do pedido
+    # Criando um pedido com desconto
+    pedido3 = Pedido(cliente="Da Cruz", desconto=DescontoPremium())
+    pedido3.valor_original = 100.0
 
-    # Aqui você pode criar pedidos, aplicar descontos e processar os pedidos
-    service.adicionar_pedido(pedido1)
-    service.adicionar_pedido(pedido2)
-    service.adicionar_pedido(pedido3)
+    # Salvamento dos pedidos no repositório
+    repo.adicionar_pedido(pedido1)
+    repo.adicionar_pedido(pedido2)
+    repo.adicionar_pedido(pedido3)
 
-    service.processar_pedidos()
+    # Adicionando o pedido ao serviço
+    pedidos = repo.listar_pedidos()
+
+    # Processando os pedidos
+    for pedido in pedidos:
+        print(f"Cliente: {pedido.cliente}")
+        print(f"Valor final: {pedido.valor_final(pedido.valor_original)}")
