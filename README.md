@@ -13,12 +13,33 @@ python -m venv .venv
 python main.py
 ```
 
-## Arquitetura em camadas
+## Testes e análise estática
+
+```bash
+pip install -r requirements-dev.txt
+pytest -v
+ruff check .
+mypy --strict src main.py
+```
+
+## Arquitetura Limpa (`src/app`)
+
+As regras de negócio não dependem de banco, framework, tela ou biblioteca externa.
+As dependências apontam sempre para dentro (das bordas para as entidades).
 
 | Camada | Pasta | Responsabilidade |
 | --- | --- | --- |
-| Controller | `src/controllers` | Recebe as entradas e encaminha para os serviços |
-| Service | `src/services` | Regras de negócio (aplicar descontos, processar pedidos) |
-| Repository | `src/repositories` | Abstrai o acesso aos dados |
-| Database | `src/database` | Infraestrutura de conexão com o banco |
-| Models | `src/models` | Estrutura dos dados (`Pedido`, descontos) |
+| Entities | `entities` | Regras de negócio puras (`Pedido`, descontos) |
+| Use Cases | `use_cases` | `CriarPedido`: coordena o fluxo de criar e listar pedidos |
+| Gateways | `gateways` | `IPedidoGateway`: contrato para salvar e listar pedidos |
+| DTOs | `dtos` | Objetos de entrada e saída que trafegam entre as camadas |
+| Repository Adapter | `adapters/repositories` | `MemoryPedidoRepository`: implementa o gateway |
+| Controller | `adapters/controllers` | `PedidoController`: porta de entrada, apenas encaminha |
+| Presenter | `presenters` | `PedidoPresenter`: formata a saída para exibição |
+| Frameworks & Drivers | `frameworks/database` | `MemoryDatabase`: armazenamento em memória |
+
+Fluxo: `main` → `PedidoController` → `CriarPedido` → `IPedidoGateway` (`MemoryPedidoRepository`)
+→ `MemoryDatabase`; a resposta volta como `CriarPedidoOutputDTO` e é formatada pelo `PedidoPresenter`.
+
+A versão anterior, em arquitetura de camadas (controllers, services, repositories, database
+e models), foi mantida em `src_antigo` para comparação.
