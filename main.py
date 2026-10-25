@@ -16,9 +16,9 @@ def main() -> None:
     pedido3 = controller.criar_pedido("Cliente C", 100.0, "premium")
 
     print("Pedidos criados:")
-    print(pedido1.cliente, pedido1.valor_original, pedido1.valor_final())
-    print(pedido2.cliente, pedido2.valor_original, pedido2.valor_final())
-    print(pedido3.cliente, pedido3.valor_original, pedido3.valor_final())
+    print(pedido1.cliente, pedido1.valor_original, pedido1.valor_final)
+    print(pedido2.cliente, pedido2.valor_original, pedido2.valor_final)
+    print(pedido3.cliente, pedido3.valor_original, pedido3.valor_final)
 
 
 if __name__ == "__main__":
