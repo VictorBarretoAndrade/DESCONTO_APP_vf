@@ -20,9 +20,9 @@ class CriarPedido:
             raise ValueError("Tipo de desconto inválido")
 
         pedido = Pedido(cliente, valor_original, desconto)
-        self.pedido_gateway.salvar(pedido)
+        self.pedido_gateway.salvar(pedido, tipo_desconto)
 
         return pedido
 
     def listar_pedidos(self) -> list[Pedido]:
-        return self.pedido_gateway.listar()
+        return [registro["pedido"] for registro in self.pedido_gateway.listar()]
